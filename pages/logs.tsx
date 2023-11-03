@@ -1,14 +1,14 @@
 import axios from "axios";
+import dayjs from "dayjs";
+import { FaSync } from "react-icons/fa";
+import { useCallback, useEffect, useState } from "react";
 import Button from "components/controls/Button";
 import TextField from "components/controls/TextField";
 import Layout from "components/layout/Layout";
-import dayjs from "dayjs";
 import { WclReportMetadata } from "lib/WclTypes";
 import { formatTime } from "lib/text";
 import useConfig from "lib/useConfig";
 import useLog from "lib/useLog";
-import { useCallback, useState } from "react";
-import { FaSync } from "react-icons/fa";
 
 
 const LogsPage = (): JSX.Element => {
@@ -43,6 +43,13 @@ const LogsPage = (): JSX.Element => {
         setLoading(false);
     }, [loading, newLogId]);
 
+    useEffect(() => {
+        if(!logData.reportId) return;
+        const data = localStorage.getItem("reports/" + logData.reportId);
+        if(!data) return;
+        setLogData(JSON.parse(data));
+    }, [logData.reportId]);
+
     return (
         <Layout>
             <h1 className="text-2xl">Your Logs</h1>
@@ -74,7 +81,7 @@ const LogsPage = (): JSX.Element => {
                         {logData.reportId === log.id ? (
                             <p className="w-24 grid place-items-center border-green-400 border border-opacity-20 rounded text-green-400 h-10 select-none">Active</p>
                         ) : (
-                            <Button onClick={() => setLogData(cur => ({reportId: log.id}))} className="mt-0 w-24">Open</Button>
+                            <Button onClick={() => setLogData({reportId: log.id})} className="mt-0 w-24">Open</Button>
                         )}
                         <Button onClick={() => {
                             if(!window.confirm("Really delete this log?")) return;

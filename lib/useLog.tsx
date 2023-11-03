@@ -1,5 +1,5 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
-import { ProcessedReport, WclConsumeData, WclReport } from "./WclTypes";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { ProcessedReport, WclBombData, WclConsumeData, WclFullAnalysis, WclReport } from "./WclTypes";
 
 type SettableValue<S> = {
     logData: S, 
@@ -11,6 +11,8 @@ export type LogData = {
     rawReport?: WclReport,
     processedReport?: ProcessedReport,
     consumeData?: Record<string, WclConsumeData>,
+    bombData?: Record<string, WclBombData>,
+    fullAnalysis?: WclFullAnalysis,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -23,7 +25,20 @@ const LogContextProvider = ({
     children: ReactNode;
     initialValue: LogData;
 }) => {
-    const [logData, setLogData] = useState<LogData>(initialValue)
+    const [logData, setLogData] = useState<LogData>(initialValue);
+
+    useEffect(() => {
+        if(!logData.reportId) return;
+        const data = localStorage.getItem("reports/" + logData.reportId);
+        if(!data) return;
+        setLogData(JSON.parse(data));
+    }, [logData.reportId]);
+
+    useEffect(() => {
+        if(!logData.reportId) return;
+        localStorage.setItem("reports/" + logData.reportId, JSON.stringify(logData));
+    }, [logData]);
+
     return <logContext.Provider value={{logData, setLogData}}>{children}</logContext.Provider>;
 };
 
