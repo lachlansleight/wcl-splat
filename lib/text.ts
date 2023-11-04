@@ -16,20 +16,11 @@ export const formatTime = (seconds: number): string => {
     return output;
 };
 
-export const getShortNumber = (value: number) => {
-    if (value < 1000) {
-        return value;
-    }
-    if (value < 1000000) {
-        if (value < 10000) {
-            return `${Math.round(value / 100) / 10}k`;
-        }
-        return `${Math.round(value / 1000)}k`;
-    }
-    if (value < 10000000) {
-        return `${Math.round(value / 100000) / 10}M`;
-    }
-    return `${Math.round(value / 1000000)}M`;
+export const getShortNumber = (value: number, decimals = 0) => {
+    if (value === 0) return "0";
+    if (value < 1000) return value.toFixed(decimals);
+    if (value < 1000000) return `${(value / 1000).toFixed(decimals)}k`;
+    return `${(value / 1000000).toFixed(decimals)}M`;
 };
 
 /** Turns a short number (e.g. 5k) into a number (5000) */

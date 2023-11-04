@@ -56,15 +56,15 @@ export interface ProcessedReport {
 }
 
 export type ProcessedFightCharacter = {
-    id: number, 
-    name: string, 
-    class: string, 
-    spec: string, 
-    damageDone: number, 
-    healingDone: number, 
-    damageTaken: number, 
-    gearIssues: string[], 
-    isEngineer: boolean
+    id: number;
+    name: string;
+    class: string;
+    spec: string;
+    damageDone: number;
+    healingDone: number;
+    damageTaken: number;
+    gearIssues: string[];
+    isEngineer: boolean;
 };
 export interface ProcessedFight {
     id: number;
@@ -93,7 +93,7 @@ export interface ProcessedCharacter {
     gearIssues: string[];
 }
 
-export type WclBand = { startTime: number, endTime: number };
+export type WclBand = { startTime: number; endTime: number };
 
 export interface WclAura {
     abilityIcon: string;
@@ -116,12 +116,12 @@ export interface WclAuraWithBand {
 }
 
 export interface WclConsumeData {
-    prePot: number,
-    fightPot: number,
-    flaskPercentage: number,
-    dualElixirPercentage: number,
-    foodPercentage: number,
-    usesElixirs: boolean,
+    prePot: number;
+    fightPot: number;
+    flaskPercentage: number;
+    dualElixirPercentage: number;
+    foodPercentage: number;
+    usesElixirs: boolean;
 }
 
 export interface WclBombData {
@@ -129,24 +129,49 @@ export interface WclBombData {
     sappers: number;
 }
 
-export type DamageDone = Record<string, number>;
-export type ActionsPerformed = Record<string, number>;
-export type DamageTaken = Record<string, {count: number, total: number}>;
-export type DebuffDamageTaken = Record<string, {ticks: number, stacks: number, total: number}>;
+export type DamageDone = Record<string, { damage: number }>;
+export type ActionsPerformed = Record<string, { actions: number }>;
+export type DamageTaken = Record<string, { ticks: number; total: number }>;
+export type DebuffDamageTaken = Record<string, { ticks: number; stacks: number; total: number }>;
+export type DebuffStacks = Record<string, { maxStacks: number; totalStacks: number }>;
 
 export const tableNames: Record<number, AnalysisTableName[]> = {
     845: ["spikes", "coldflame"],
-    846: ["adds", /*"mindControlTargets",*/ "interrupts", /*"cc",*/ "deathAndDecay", "ghostMelee", "ghostSplash"],
+    846: [
+        "adds",
+        /*"mindControlTargets",*/ "interrupts",
+        /*"cc",*/ "deathAndDecay",
+        "ghostMelee",
+        "ghostSplash",
+    ],
     848: ["bloodbeasts", "bloodbeastsMelee", "bloodNovaSplash"],
     849: ["vileGasSplash", "malleableGoo", "pungentBlight"],
     850: ["vileGasSplash", "spray", "explosion", "ooze"],
     851: ["redSlime", "greenSlime", "slimePuddleTaken", "malleableGoo", "gasBomb"],
     852: ["shockVortex", "empoweredShockVortex", "shadowPrison", "darkNuclei"],
     853: ["boltSplash"],
-    854: ["blazing", "suppressors", "columnOfFrost", "manaVoid", "acidBurst", "gutSpray", "wormMelee", "interrupts"],
-    855: ["chilledToTheBone", "instabilitySplash", "arcaneBuffet", "blisteringCold"],
-    856: ["ragingSpirit", "valkyr", "vileSpirit", "shockwave", "soulShriek", "painAndSuffering", "defile", "spiritSplash"],
-}
+    854: [
+        "blazing",
+        "suppressors",
+        "columnOfFrost",
+        "manaVoid",
+        "acidBurst",
+        "gutSpray",
+        "wormMelee",
+        "interrupts",
+    ],
+    855: ["chilledToTheBone", "instabilitySplash", /*"mysticBuffet",*/ "blisteringCold"],
+    856: [
+        "ragingSpirit",
+        "valkyr",
+        "vileSpirit",
+        "shockwave",
+        "soulShriek",
+        "painAndSuffering",
+        "defile",
+        "spiritSplash",
+    ],
+};
 export const prettyTableNames: Record<string, string> = {
     spikes: "Damage to Spikes",
     coldflame: "Coldflame Damage",
@@ -187,104 +212,116 @@ export const prettyTableNames: Record<string, string> = {
     iceTomb: "Damage to Ice Tombs",
     chilledToTheBone: "Chilled to the Bone Damage",
     instabilitySplash: "Instability Splash Damage",
-    arcaneBuffet: "Arcane Buffet Damage",
+    mysticBuffet: "Mystic Buffet Stacks",
     blisteringCold: "Blistering Cold Damage",
     ragingSpirit: "Damage to Raging Spirits",
+    vileSpirit: "Damage to Vile Spirits",
     valkyr: "Damage to Valkyrs",
     shockwave: "Shockwave Damage",
     soulShriek: "Soul Shriek Damage",
     painAndSuffering: "Pain and Suffering Damage",
     defile: "Defile Damage",
-    ragingSpirits: "Damage to Raging Spirits",
     spiritSplash: "Spirit Splash Damage",
-}
-export type AnalysisTableName = 
-    "spikes" | "coldflame" |
-    "adds" | "mindControlTargets" | "interrupts" | "cc" | "deathAndDecay" | "ghostMelee" | "ghostSplash" |
-    "bloodbeasts" | "bloodbeastsMelee" | "bloodNovaSplash" |
-    "vileGasSplash" | "malleableGoo" | "pungentBlight" |
-    "slimePool" | "spray" | "explosion" | "ooze" |
-    "redSlime" | "greenSlime" | "slimePuddleTaken" | "gasBomb" | "malleableGoo" |
-    "shockVortex" | "empoweredShockVortex" | "shadowPrison" | "darkNuclei" |
-    "whirlSplash" | "boltSplash" |
-    "blazing" | "suppressors" | "columnOfFrost" | "manaVoid" | "acidBurst" | "gutSpray" | "wormMelee" | "interrupts" |
-    "iceTomb" | "chilledToTheBone" | "instabilitySplash" | "arcaneBuffet" | "blisteringCold" |
-    "ragingSpirit" | "valkyr" | "shockwave" | "soulShriek" | "painAndSuffering" | "defile" | "vileSpirit" | "spiritSplash";
+};
+export type AnalysisTableName =
+    | "spikes"
+    | "coldflame"
+    | "adds"
+    | "mindControlTargets"
+    | "interrupts"
+    | "cc"
+    | "deathAndDecay"
+    | "ghostMelee"
+    | "ghostSplash"
+    | "bloodbeasts"
+    | "bloodbeastsMelee"
+    | "bloodNovaSplash"
+    | "vileGasSplash"
+    | "malleableGoo"
+    | "pungentBlight"
+    | "slimePool"
+    | "spray"
+    | "explosion"
+    | "ooze"
+    | "redSlime"
+    | "greenSlime"
+    | "slimePuddleTaken"
+    | "gasBomb"
+    | "malleableGoo"
+    | "shockVortex"
+    | "empoweredShockVortex"
+    | "shadowPrison"
+    | "darkNuclei"
+    | "whirlSplash"
+    | "boltSplash"
+    | "blazing"
+    | "suppressors"
+    | "columnOfFrost"
+    | "manaVoid"
+    | "acidBurst"
+    | "gutSpray"
+    | "wormMelee"
+    | "interrupts"
+    | "iceTomb"
+    | "chilledToTheBone"
+    | "instabilitySplash"
+    | "mysticBuffet"
+    | "blisteringCold"
+    | "ragingSpirit"
+    | "valkyr"
+    | "shockwave"
+    | "soulShriek"
+    | "painAndSuffering"
+    | "defile"
+    | "vileSpirit"
+    | "spiritSplash";
 export type AnalysisFightSelection = "all" | number;
 export type WclAnalysisBaseFight = {
     fightId: "all" | number;
     processed: boolean;
-}
-export interface WclFullAnalysis {
-    marrowgar: (WclAnalysisBaseFight & {
-        spikes: DamageDone;
-        coldflame: DamageTaken;
-    })[],
-    deathwhisper: (WclAnalysisBaseFight & {
-        adds: DamageDone;
-        mindControlTargets: DamageDone;
-        interrupts: ActionsPerformed;
-        cc: ActionsPerformed;
-        deathAndDecay: DamageTaken;
-        ghostMelee: DamageTaken;
-        ghostSplash: DamageTaken;
-    })[],
-    saurfang: (WclAnalysisBaseFight & {
-        bloodbeasts: DamageDone;
-        bloodbeastsMelee: DamageTaken;
-        bloodNovaSplash: DamageTaken;
-    })[],
-    festergut: (WclAnalysisBaseFight & {
-        vileGasSplash: DamageTaken;
-        malleableGoo: DamageTaken;
-        pungentBlight: DamageTaken;
-    })[],
-    rotface: (WclAnalysisBaseFight & {
-        spray: DamageTaken;
-        explosion: DamageTaken;
-        ooze: DamageTaken;
-        vileGasSplash: DamageTaken;
-    })[],
-    putricide: (WclAnalysisBaseFight & {
-        redSlime: DamageDone;
-        greenSlime: DamageDone;
-        slimePuddleTaken: DamageTaken;
-        malleableGoo: DamageTaken;
-        gasBomb: DamageTaken;
-    })[],
-    council: (WclAnalysisBaseFight & {
-        shockVortex: DamageTaken;
-        empoweredShockVortex: DamageTaken;
-        shadowPrison: DebuffDamageTaken;
-        darkNuclei: DamageDone;
-    })[],
-    bloodqueen: (WclAnalysisBaseFight & {
-        boltSplash: DamageTaken;
-    })[],
-    dreamwalker: (WclAnalysisBaseFight & {
-        blazing: DamageDone;
-        suppressors: DamageDone;
-        interrupts: ActionsPerformed;
-        columnOfFrost: DamageTaken;
-        manaVoid: DamageTaken;
-        acidBurst: DamageTaken;
-        gutSpray: DamageTaken;
-        wormMelee: DamageTaken;
-    })[],
-    sindragosa: (WclAnalysisBaseFight & {
-        chilledToTheBone: DebuffDamageTaken;
-        instabilitySplash: DamageTaken;
-        arcaneBuffet: DebuffDamageTaken;
-        blisteringCold: DamageTaken;
-    })[],
-    lichking: (WclAnalysisBaseFight & {
-        ragingSpirit: DamageDone;
-        valkyr: DamageDone;
-        vileSpirit: DamageDone;
-        shockwave: DamageTaken;
-        soulShriek: DamageTaken;
-        painAndSuffering: DebuffDamageTaken;
-        defile: DamageTaken;
-        spiritSplash: DamageTaken;
-    })[],
-}
+    type: "unknown" | "damage-done" | "damage-taken" | "actions-performed" | "debuff-damage-taken";
+};
+export const bossKeysById: Record<number, string> = {
+    845: "marrowgar",
+    846: "deathwhisper",
+    848: "saurfang",
+    849: "festergut",
+    850: "rotface",
+    851: "putricide",
+    852: "council",
+    853: "bloodqueen",
+    854: "dreamwalker",
+    855: "sindragosa",
+    856: "lichking",
+};
+
+export type WclFullAnalysisTableType =
+    | DamageDone
+    | DamageTaken
+    | ActionsPerformed
+    | DebuffDamageTaken
+    | DebuffStacks;
+export type WclFullAnalysisFight = WclAnalysisBaseFight & {
+    tables: Record<string, WclFullAnalysisTableType>;
+};
+export type WclFullAnalysis = Record<number, WclFullAnalysisFight[]>;
+
+export const isDebuffDamageTakenTable = (
+    table: WclFullAnalysisTableType
+): table is DebuffDamageTaken => {
+    return Object.values(table)[0].stacks != null;
+};
+export const isDamageTakenTable = (table: WclFullAnalysisTableType): table is DamageTaken => {
+    return Object.values(table)[0].ticks != null;
+};
+export const isDamageDoneTable = (table: WclFullAnalysisTableType): table is DamageDone => {
+    return Object.values(table)[0].damage != null;
+};
+export const isActionsPerformedTable = (
+    table: WclFullAnalysisTableType
+): table is ActionsPerformed => {
+    return Object.values(table)[0].actions != null;
+};
+export const isDebuffsTable = (table: WclFullAnalysisTableType): table is DebuffStacks => {
+    return Object.values(table)[0].maxStacks != null;
+};

@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }: AppProps): ReactNode {
     return (
         <>
             <ConfigContextProvider>
-                <LogContextProvider initialValue={{}}>
+                <LogContextProvider initialValue={{ fullAnalysis: {} }}>
                     <Component {...pageProps} />
                 </LogContextProvider>
             </ConfigContextProvider>

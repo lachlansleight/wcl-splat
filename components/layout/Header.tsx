@@ -21,8 +21,7 @@ const Header = ({
                 </div>
                 <div className="flex md:flex-grow items-center justify-between gap-5 px-5">
                     <div className="flex-grow" />
-                    <div className="flex">
-                    </div>
+                    <div className="flex"></div>
                 </div>
             </div>
             <div className="flex md:hidden px-4 gap-4 h-6">

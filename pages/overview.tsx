@@ -1,98 +1,83 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import axios from "axios";
-import {FaSync} from "react-icons/fa";
-import Button from "components/controls/Button";
-import TextField from "components/controls/TextField";
-import Layout from "components/layout/Layout";
-import { WclConsumeData, WclFight, WclReport } from "lib/WclTypes";
-import ColorUtils from "lib/colors";
+import { FaSync } from "react-icons/fa";
+import {
+    GiCheckMark,
+    GiPlainCircle,
+    GiSkullCrossedBones,
+    GiStopwatch,
+} from "react-icons/gi";
 import dayjs from "dayjs";
+import Button from "components/controls/Button";
+import Layout from "components/layout/Layout";
+import { WclFight } from "lib/WclTypes";
 import useLog from "lib/useLog";
 import RawFightTile from "components/wcl/RawFightTile";
 import { formatTime } from "lib/text";
-import { GiCheckMark, GiPlainCircle, GiSkullCrossedBones, GiSkullShield, GiStopwatch } from "react-icons/gi";
 import Pill from "components/atoms/Pill";
 import useConfig from "lib/useConfig";
 
 const OverviewPage = (): JSX.Element => {
-
-    const {config} = useConfig();
-    const {logData, setLogData} = useLog();
+    const { config } = useConfig();
+    const { logData, setLogData } = useLog();
     const [loading, setLoading] = useState(false);
-    const [consumeData, setConsumeData] = useState<Record<string, WclConsumeData>>({});
     const loadReport = useCallback(async () => {
-        if(loading) return;
-        if(!logData.reportId) return;
+        if (loading) return;
+        if (!logData.reportId) return;
         setLoading(true);
-        const result = (await axios.get(`/api/report?reportId=${logData.reportId}&apiKey=${config.apiKey}`)).data;
+        const result = (
+            await axios.get(`/api/report?reportId=${logData.reportId}&apiKey=${config.apiKey}`)
+        ).data;
         console.log(result);
-        setLogData(cur => ({...cur, rawReport: result}));
+        setLogData(cur => ({ ...cur, rawReport: result }));
         setLoading(false);
     }, [loading, config.apiKey, logData.reportId]);
 
-    const getConsumes = useCallback(async () => {
-        if(!logData.rawReport) return;
-        if(loading) return;
-        const report = logData.rawReport;
-        const results: Record<string, WclConsumeData> = {};
-        for(let i = 0; i < report.friendlies.length; i++) {
-            const result = (await axios.post(`/api/consumes?player=${report.friendlies[i].name}&apiKey=${config.apiKey}`, {report})).data;
-            results[report.friendlies[i].name] = result[report.friendlies[i].name];
-            console.log(results);
-            setConsumeData({...results});
-        }
-        setLoading(false);
-    }, [loading, config.apiKey, logData.rawReport]);
-
-    const clearAll = () => {
-        setLogData(cur => ({reportId: cur.reportId}));
-        setConsumeData({});
-    }
-
     type FightGroup = {
-        name: string,
-        start: number,
-        end: number,
-        wipes: number,
-        kill: boolean,
-        heroic: boolean,
-        fights: WclFight[],
-    }
+        name: string;
+        start: number;
+        end: number;
+        wipes: number;
+        kill: boolean;
+        heroic: boolean;
+        fights: WclFight[];
+    };
 
     const groupedFights = useMemo<Record<string, FightGroup>>(() => {
-        if(!logData.rawReport) return {};
+        if (!logData.rawReport) return {};
         const output: Record<string, FightGroup> = {};
-        for(let i = 0; i < logData.rawReport.fights.length; i++) {
+        for (let i = 0; i < logData.rawReport.fights.length; i++) {
             const fight: WclFight = logData.rawReport.fights[i];
             const key = fight.name + (fight.difficulty === 3 ? " Normal" : " Heroic");
-            if(!output[key]) output[key] = {
-                name: fight.name, 
-                start: fight.start_time, 
-                end: fight.end_time, 
-                heroic: fight.difficulty === 4, 
-                fights: [],
-                wipes: 0,
-                kill: false,
-            };
+            if (!output[key])
+                output[key] = {
+                    name: fight.name,
+                    start: fight.start_time,
+                    end: fight.end_time,
+                    heroic: fight.difficulty === 4,
+                    fights: [],
+                    wipes: 0,
+                    kill: false,
+                };
             output[key].fights.push(fight);
             output[key].start = Math.min(output[key].start, fight.start_time);
             output[key].end = Math.max(output[key].end, fight.end_time);
             output[key].fights.sort((a, b) => a.start_time - b.start_time);
-            if(fight.kill) output[key].kill = true;
+            if (fight.kill) output[key].kill = true;
             else output[key].wipes++;
         }
         return output;
     }, [logData.rawReport]);
 
-    if(!logData.reportId) {
+    if (!logData.reportId) {
         return (
             <Layout>
                 <p>No report is loaded</p>
             </Layout>
-        )
+        );
     }
 
-    if(!logData.rawReport) {
+    if (!logData.rawReport) {
         return (
             <Layout>
                 <div className="grid place-items-center h-96">
@@ -101,14 +86,16 @@ const OverviewPage = (): JSX.Element => {
                             <FaSync className="text-4xl animate-spin" />
                         ) : (
                             <>
-                                <h1 className="text-2xl">{config.logs.find(l => l.id === logData.reportId)?.title || ""}</h1>
+                                <h1 className="text-2xl">
+                                    {config.logs.find(l => l.id === logData.reportId)?.title || ""}
+                                </h1>
                                 <Button onClick={loadReport}>Load Fights Overview</Button>
                             </>
                         )}
                     </div>
                 </div>
             </Layout>
-        )
+        );
     }
 
     return (
@@ -119,25 +106,51 @@ const OverviewPage = (): JSX.Element => {
             </div>
             <div className="flex flex-col gap-4">
                 {Object.keys(groupedFights).map(fightName => (
-                    <div key={fightName} className="border border-white border-opacity-50 rounded p-4">
+                    <div
+                        key={fightName}
+                        className="border border-white border-opacity-50 rounded p-4"
+                    >
                         <div className="flex gap-4 justify-between">
                             <h2 className="text-2xl flex gap-4 items-center">
                                 <span>{groupedFights[fightName].name}</span>
                             </h2>
                             <div className="flex gap-4">
-                                {groupedFights[fightName].heroic 
-                                    ? <Pill className="text-orange-400 border-orange-400 w-24"><GiSkullCrossedBones className="relative" /> Heroic</Pill>
-                                    : <Pill className="text-blue-400 border-blue-400 w-24"><GiPlainCircle className="relative" /> Normal</Pill>}
-                                <Pill className="border-white w-24"><GiStopwatch /> {formatTime((groupedFights[fightName].end - groupedFights[fightName].start) / 1000)}</Pill>
-                                {groupedFights[fightName].wipes > 0 
-                                    ? <Pill className="border-red-400 text-red-400 w-24">{groupedFights[fightName].wipes} Wipe{groupedFights[fightName].wipes !== 1 ? "s" : ""}</Pill>
-                                    : <div className="w-24" />
-                                }
-                                {groupedFights[fightName].kill && <Pill className="border-green-400 text-green-400"><GiCheckMark /> Kill</Pill>}
+                                {groupedFights[fightName].heroic ? (
+                                    <Pill className="text-orange-400 border-orange-400 w-24">
+                                        <GiSkullCrossedBones className="relative" /> Heroic
+                                    </Pill>
+                                ) : (
+                                    <Pill className="text-blue-400 border-blue-400 w-24">
+                                        <GiPlainCircle className="relative" /> Normal
+                                    </Pill>
+                                )}
+                                <Pill className="border-white w-24">
+                                    <GiStopwatch />{" "}
+                                    {formatTime(
+                                        (groupedFights[fightName].end -
+                                            groupedFights[fightName].start) /
+                                            1000
+                                    )}
+                                </Pill>
+                                {groupedFights[fightName].wipes > 0 ? (
+                                    <Pill className="border-red-400 text-red-400 w-24">
+                                        {groupedFights[fightName].wipes} Wipe
+                                        {groupedFights[fightName].wipes !== 1 ? "s" : ""}
+                                    </Pill>
+                                ) : (
+                                    <div className="w-24" />
+                                )}
+                                {groupedFights[fightName].kill && (
+                                    <Pill className="border-green-400 text-green-400">
+                                        <GiCheckMark /> Kill
+                                    </Pill>
+                                )}
                             </div>
                         </div>
                         <div className="flex flex-wrap gap-4 mt-4">
-                            {groupedFights[fightName].fights.map((f, i) => <RawFightTile key={f.start_time} fight={f} attempt={i + 1} />)}
+                            {groupedFights[fightName].fights.map((f, i) => (
+                                <RawFightTile key={f.start_time} fight={f} attempt={i + 1} />
+                            ))}
                         </div>
                     </div>
                 ))}

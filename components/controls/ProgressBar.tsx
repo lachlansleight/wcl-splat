@@ -20,6 +20,7 @@ const ProgressBar = ({
                 style={{
                     backgroundColor: color,
                     width: `${progress * 100}%`,
+                    transition: "all 0.3s",
                 }}
             />
             <div className={`relative ${className}`}>{children}</div>
