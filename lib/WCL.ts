@@ -668,11 +668,11 @@ class WCL {
                     report.id,
                     "damage-taken"
                 )}&start=${start}&end=${end}&abilityid=69770&filter=source.id != target.id`, //instabilitySplash
-                `${this.getEventsUrl(
+                /*`${this.getEventsUrl(
                     apiKey,
                     report.id,
                     "debuffs"
-                )}&start=${start}&end=${end}&abilityid=70127`, //mysticBuffet
+                )}&start=${start}&end=${end}&abilityid=70127`, //mysticBuffet*/
                 `${this.getTableUrl(
                     apiKey,
                     report.id,
@@ -734,6 +734,7 @@ class WCL {
             });
             return { type: "damage-done", data: output };
         } else if (url.includes("damage-taken") && !url.includes("/events/")) {
+            console.log("?");
             const output: DamageTaken = {};
             report.characters.forEach(character => {
                 const found = data.entries.find((e: any) => e.name === character.name);
@@ -802,9 +803,8 @@ class WCL {
                         curStacks
                     );
                 });
-                console.log(output);
-                return { type: "debuff-stacks", data: output };
             });
+            return { type: "debuff-stacks", data: output };
         } else if (url.includes("casts") && url.includes("/events/")) {
             const output: ActionsPerformed = {};
             report.characters.forEach(character => {

@@ -304,6 +304,7 @@ const CharactersPage = (): JSX.Element => {
                                         { processedReport: logData.processedReport }
                                     )
                                     .then(res => {
+                                        console.log(res.data);
                                         setTempData(res.data);
                                     });
                             }}
