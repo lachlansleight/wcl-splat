@@ -588,6 +588,11 @@ class WCL {
                     report.id,
                     "damage-done"
                 )}&start=${start}&end=${end}&options=8192&filter=target.id=38369`, //dark nuclei
+                `${this.getEventsUrl(
+                    apiKey,
+                    report.id,
+                    "dispels"
+                )}&start=${start}&end=${end}&abilityid=71807`, //dispels
             ],
             853: [
                 `${this.getTableUrl(

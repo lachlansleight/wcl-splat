@@ -149,7 +149,7 @@ export const tableNames: Record<number, AnalysisTableName[]> = {
     849: ["vileGasSplash", "malleableGoo", "pungentBlight"],
     850: ["vileGasSplash", "spray", "explosion", "ooze"],
     851: ["redSlime", "greenSlime", "slimePuddleTaken", "malleableGoo", "gasBomb"],
-    852: ["shockVortex", "empoweredShockVortex", "shadowPrison", "darkNuclei"],
+    852: ["shockVortex", "empoweredShockVortex", "shadowPrison", "darkNuclei", "dispels"],
     853: ["boltSplash"],
     854: [
         "blazing",
@@ -202,6 +202,7 @@ export const prettyTableNames: Record<string, string> = {
     empoweredShockVortex: "Empowered Shock Vortex Damage",
     shadowPrison: "Shadow Prison Damage",
     darkNuclei: "Damage Dark Nuclei",
+    dispels: "Dispels",
     whirlSplash: "Bloodbolt Whirl Splash Damage",
     boltSplash: "Twilight Bloodbolt Splash Damage",
     blazing: "Damage to Blazing Skeletons",
@@ -226,9 +227,9 @@ export const prettyTableNames: Record<string, string> = {
     spiritSplash: "Spirit Splash Damage",
 };
 export type AnalysisTableName =
-    | "spikes"
+    | "spikes" //marrowgar
     | "coldflame"
-    | "adds"
+    | "adds" //LDW
     | "mindControlTargets"
     | "interrupts"
     | "cc"
@@ -236,28 +237,29 @@ export type AnalysisTableName =
     | "ghostMelee"
     | "ghostSplash"
     | "decurses"
-    | "bloodbeasts"
+    | "bloodbeasts" //Saurfang
     | "bloodbeastsMelee"
     | "bloodNovaSplash"
-    | "vileGasSplash"
+    | "vileGasSplash" //Festergut
     | "malleableGoo"
     | "pungentBlight"
-    | "slimePool"
+    | "slimePool" //Rotface
     | "spray"
     | "explosion"
     | "ooze"
-    | "redSlime"
+    | "redSlime" //Putricide
     | "greenSlime"
     | "slimePuddleTaken"
     | "gasBomb"
     | "malleableGoo"
-    | "shockVortex"
+    | "shockVortex" //Council
     | "empoweredShockVortex"
     | "shadowPrison"
     | "darkNuclei"
-    | "whirlSplash"
+    | "dispels"
+    | "whirlSplash" //Blood Queen
     | "boltSplash"
-    | "blazing"
+    | "blazing" //Dreamwalker
     | "suppressors"
     | "columnOfFrost"
     | "manaVoid"
@@ -265,12 +267,12 @@ export type AnalysisTableName =
     | "gutSpray"
     | "wormMelee"
     | "interrupts"
-    | "iceTomb"
+    | "iceTomb" //Sindragosa
     | "chilledToTheBone"
     | "instabilitySplash"
     | "mysticBuffet"
     | "blisteringCold"
-    | "ragingSpirit"
+    | "ragingSpirit" //Lich King
     | "valkyr"
     | "shockwave"
     | "soulShriek"
