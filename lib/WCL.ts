@@ -478,6 +478,11 @@ class WCL {
                     report.id,
                     "damage-taken"
                 )}&start=${start}&end=${end}&abilityid=71544`, //ghost blast
+                `${this.getEventsUrl(
+                    apiKey,
+                    report.id,
+                    "dispels"
+                )}&start=${start}&end=${end}&abilityid=71237`, //decurses
             ],
             848: [
                 `${this.getTableUrl(
@@ -722,6 +727,14 @@ class WCL {
             });
             return { type: "damage-taken", data: output };
         } else if (url.includes("interrupts")) {
+            const output: ActionsPerformed = {};
+            report.characters.forEach(character => {
+                const found = data.events.filter((e: any) => e.sourceID === character.id);
+                if (!found.length) output[character.name] = { actions: 0 };
+                else output[character.name] = { actions: found.length };
+            });
+            return { type: "actions-performed", data: output };
+        } else if (url.includes("dispels")) {
             const output: ActionsPerformed = {};
             report.characters.forEach(character => {
                 const found = data.events.filter((e: any) => e.sourceID === character.id);

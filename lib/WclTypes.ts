@@ -143,6 +143,7 @@ export const tableNames: Record<number, AnalysisTableName[]> = {
         /*"cc",*/ "deathAndDecay",
         "ghostMelee",
         "ghostSplash",
+        "decurses",
     ],
     848: ["bloodbeasts", "bloodbeastsMelee", "bloodNovaSplash"],
     849: ["vileGasSplash", "malleableGoo", "pungentBlight"],
@@ -182,6 +183,7 @@ export const prettyTableNames: Record<string, string> = {
     deathAndDecay: "Death and Decay Damage",
     ghostMelee: "Ghost Melee Damage",
     ghostSplash: "Ghost Splash Damage",
+    decurses: "Decurses",
     bloodbeasts: "Damage to Bloodbeasts",
     bloodbeastsMelee: "Bloodbeast Melee Damage",
     bloodNovaSplash: "Blood Nova Splash Damage",
@@ -233,6 +235,7 @@ export type AnalysisTableName =
     | "deathAndDecay"
     | "ghostMelee"
     | "ghostSplash"
+    | "decurses"
     | "bloodbeasts"
     | "bloodbeastsMelee"
     | "bloodNovaSplash"

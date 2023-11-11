@@ -1,12 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import axios from "axios";
 import { FaSync } from "react-icons/fa";
-import {
-    GiCheckMark,
-    GiPlainCircle,
-    GiSkullCrossedBones,
-    GiStopwatch,
-} from "react-icons/gi";
+import { GiCheckMark, GiPlainCircle, GiSkullCrossedBones, GiStopwatch } from "react-icons/gi";
 import dayjs from "dayjs";
 import Button from "components/controls/Button";
 import Layout from "components/layout/Layout";

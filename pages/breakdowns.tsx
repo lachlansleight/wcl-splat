@@ -312,7 +312,7 @@ const CharactersPage = (): JSX.Element => {
                         </Button>
                     </div>
                     <WclFullAnalysisTable processedData={{ ...processedData }} />
-                    <pre>{JSON.stringify(tempData, null, 2)}</pre>
+                    {tempData && <pre>{JSON.stringify(tempData, null, 2)}</pre>}
                 </div>
             )}
         </Layout>
