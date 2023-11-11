@@ -439,6 +439,7 @@ class WCL {
         // For now, let's just note down what we need
         const urls: Record<number, string[]> = {
             845: [
+                //Marrowgar
                 `${this.getTableUrl(
                     apiKey,
                     report.id,
@@ -451,18 +452,31 @@ class WCL {
                 )}&start=${start}&end=${end}&abilityid=69146`, //coldflame
             ],
             846: [
+                //LDW
                 `${this.getTableUrl(
                     apiKey,
                     report.id,
                     "damage-done"
                 )}&start=${start}&end=${end}&filter=target.id=37949 OR target.id=38010 OR target.id=38136 OR target.id=37890 OR target.id=38009 OR target.id=38135`, //adds,
-                //``, //damage to MC targets is kind of a pain
+                `${this.getTableUrl(
+                    apiKey,
+                    report.id,
+                    "damage-done"
+                )}&start=${start}&end=${end}&targetAurasPresent=71289&options=8192`, //Damage to MC targets
                 `${this.getEventsUrl(
                     apiKey,
                     report.id,
                     "interrupts"
                 )}&start=${start}&end=${end}&filter=target.id=37949 OR target.id=38010 OR target.id=38136 OR target.id=37890 OR target.id=38009 OR target.id=38135`, //interrupts,
-                //``, //CC is also kind of a pain
+                `${this.getEventsUrl(
+                    apiKey,
+                    report.id,
+                    "casts"
+                )}&start=${start}&end=${end}&targetAurasPresent=71289&filter=${[
+                    33786, 51514, 61305, 61780, 28272, 61025, 28271, 118, 12824, 12825, 12826,
+                ]
+                    .map(id => `ability.id=${id}`)
+                    .join(" OR ")}`, //CC
                 `${this.getTableUrl(
                     apiKey,
                     report.id,
@@ -791,6 +805,14 @@ class WCL {
                 console.log(output);
                 return { type: "debuff-stacks", data: output };
             });
+        } else if (url.includes("casts") && url.includes("/events/")) {
+            const output: ActionsPerformed = {};
+            report.characters.forEach(character => {
+                const found = data.events.filter((e: any) => e.sourceID === character.id);
+                if (!found.length) output[character.name] = { actions: 0 };
+                else output[character.name] = { actions: found.length };
+            });
+            return { type: "actions-performed", data: output };
         } else if (
             url.includes("damage-taken") &&
             url.includes("/events/") &&
