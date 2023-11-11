@@ -719,7 +719,7 @@ class WCL {
                 };
             });
             return { type: "damage-done", data: output };
-        } else if (url.includes("damage-taken")) {
+        } else if (url.includes("damage-taken") && !url.includes("/events/")) {
             const output: DamageTaken = {};
             report.characters.forEach(character => {
                 const found = data.entries.find((e: any) => e.name === character.name);
@@ -791,6 +791,46 @@ class WCL {
                 console.log(output);
                 return { type: "debuff-stacks", data: output };
             });
+        } else if (
+            url.includes("damage-taken") &&
+            url.includes("/events/") &&
+            url.includes("72380")
+        ) {
+            //special case for blood nova splash on saurfang - need to look at damage taken and compare timestamps
+            const output: DamageTaken = {};
+            for (let i = 0; i < data.events.length; i++) {
+                let found = false;
+                const nameA = report.characters.find(c => c.id === data.events[i].targetID);
+                if (!nameA) {
+                    console.error("Failed to find character with ID " + data.events[i].targetID);
+                    break;
+                }
+                for (let j = i + 1; j < data.events.length; j++) {
+                    if (data.events[i].timestamp === data.events[j].timestamp) {
+                        //events have matching timestamp, and so there has been splash damage
+                        const nameB = report.characters.find(c => c.id === data.events[j].targetID);
+                        if (!nameB) {
+                            console.error(
+                                "Failed to find character with ID " + data.events[j].targetID
+                            );
+                            break;
+                        }
+                        if (!found) {
+                            if (!output[nameA.name]) output[nameA.name] = { ticks: 0, total: 0 };
+                            output[nameA.name].ticks++;
+                            output[nameA.name].total += data.events[i].amount;
+                            found = true;
+                        }
+                        if (!output[nameB.name]) output[nameB.name] = { ticks: 0, total: 0 };
+                        output[nameB.name].ticks++;
+                        output[nameB.name].total += data.events[j].amount;
+                    } else {
+                        i = j + 1;
+                        break;
+                    }
+                }
+            }
+            return { type: "damage-taken", data: output };
         } else {
             return { type: "error", data };
         }
