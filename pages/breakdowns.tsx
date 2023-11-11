@@ -229,6 +229,7 @@ const CharactersPage = (): JSX.Element => {
         }
     }, [logData.fullAnalysis, boss, fight, table]);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [tempData, setTempData] = useState<any>(null);
 
     if (!logData.reportId) {
@@ -262,8 +263,8 @@ const CharactersPage = (): JSX.Element => {
                 onFightChange={setFight}
             />
             {loading ? (
-                <div className="w-full flex flex-col items-center gap-2">
-                    <FaSync className="text-4xl animate-spin" />
+                <div className="w-full flex flex-col items-center gap-2 pt-4">
+                    <FaSync className="text-4xl animate-spin mb-4" />
                     <ProgressBar
                         progress={loadingInfo.totalProgress}
                         containerClassName="h-8 border border-white rounded w-full grid place-items-center"
@@ -277,41 +278,43 @@ const CharactersPage = (): JSX.Element => {
 
             {!loading && (
                 <div className="flex flex-col gap-2">
-                    <div className="flex flex-wrap gap-4">
-                        {currentTable ? (
-                            <Button
+                    {!!boss && (
+                        <div className="flex flex-wrap gap-4 justify-center mb-2">
+                            {currentTable ? (
+                                <Button
+                                    onClick={() => {
+                                        processBoss();
+                                    }}
+                                >
+                                    Refresh Boss Data
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={() => {
+                                        processBoss();
+                                    }}
+                                >
+                                    Load Boss Data
+                                </Button>
+                            )}
+                            {/* <Button
                                 onClick={() => {
-                                    processBoss();
+                                    setTempData({ loading: "true" });
+                                    axios
+                                        .post(
+                                            `/api/breakdown?boss=${boss}&table=${table}&attempt=${fight}&apiKey=${config.apiKey}`,
+                                            { processedReport: logData.processedReport }
+                                        )
+                                        .then(res => {
+                                            console.log(res.data);
+                                            setTempData(res.data);
+                                        });
                                 }}
                             >
-                                Refresh Data
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={() => {
-                                    processBoss();
-                                }}
-                            >
-                                Load Data
-                            </Button>
-                        )}
-                        <Button
-                            onClick={() => {
-                                setTempData({ loading: "true" });
-                                axios
-                                    .post(
-                                        `/api/breakdown?boss=${boss}&table=${table}&attempt=${fight}&apiKey=${config.apiKey}`,
-                                        { processedReport: logData.processedReport }
-                                    )
-                                    .then(res => {
-                                        console.log(res.data);
-                                        setTempData(res.data);
-                                    });
-                            }}
-                        >
-                            Load Debug
-                        </Button>
-                    </div>
+                                Load Debug
+                            </Button> */}
+                        </div>
+                    )}
                     <WclFullAnalysisTable processedData={{ ...processedData }} />
                     {tempData && <pre>{JSON.stringify(tempData, null, 2)}</pre>}
                 </div>
