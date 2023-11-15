@@ -12,6 +12,7 @@ import {
     isActionsPerformedTable,
     isDamageDoneTable,
     isDamageTakenTable,
+    isDebuffDamageTakenTable,
     isDebuffsTable,
     prettyTableNames,
     tableNames,
@@ -104,17 +105,60 @@ const CharactersPage = (): JSX.Element => {
                 } else {
                     Object.keys(data.data).forEach(playerName => {
                         if (isDamageDoneTable(data.data)) {
+                            if (!combinedFight.tables[tableNames[boss][j]][playerName]) {
+                                combinedFight.tables[tableNames[boss][j]][playerName] = {
+                                    damage: 0,
+                                };
+                            }
                             (combinedFight.tables[tableNames[boss][j]][playerName] as any).damage +=
                                 data.data[playerName].damage;
                         } else if (isDamageTakenTable(data.data)) {
+                            if (!combinedFight.tables[tableNames[boss][j]][playerName]) {
+                                combinedFight.tables[tableNames[boss][j]][playerName] = {
+                                    damage: 0,
+                                    ticks: 0,
+                                };
+                            }
                             (combinedFight.tables[tableNames[boss][j]][playerName] as any).ticks +=
                                 data.data[playerName].ticks;
                             (combinedFight.tables[tableNames[boss][j]][playerName] as any).total +=
                                 data.data[playerName].total;
                         } else if (isActionsPerformedTable(data.data)) {
+                            if (!combinedFight.tables[tableNames[boss][j]][playerName]) {
+                                combinedFight.tables[tableNames[boss][j]][playerName] = {
+                                    actions: 0,
+                                };
+                            }
                             (
                                 combinedFight.tables[tableNames[boss][j]][playerName] as any
                             ).actions += data.data[playerName].actions;
+                        } else if (isDebuffsTable(data.data)) {
+                            if (!combinedFight.tables[tableNames[boss][j]][playerName]) {
+                                combinedFight.tables[tableNames[boss][j]][playerName] = {
+                                    maxStacks: 0,
+                                    totalStacks: 0,
+                                };
+                            }
+                            (
+                                combinedFight.tables[tableNames[boss][j]][playerName] as any
+                            ).maxStacks += data.data[playerName].maxStacks;
+                            (
+                                combinedFight.tables[tableNames[boss][j]][playerName] as any
+                            ).totalStacks += data.data[playerName].totalStacks;
+                        } else if (isDebuffDamageTakenTable(data.data)) {
+                            if (!combinedFight.tables[tableNames[boss][j]][playerName]) {
+                                combinedFight.tables[tableNames[boss][j]][playerName] = {
+                                    ticks: 0,
+                                    stacks: 0,
+                                    total: 0,
+                                };
+                            }
+                            (combinedFight.tables[tableNames[boss][j]][playerName] as any).ticks +=
+                                data.data[playerName].ticks;
+                            (combinedFight.tables[tableNames[boss][j]][playerName] as any).stacks +=
+                                data.data[playerName].stacks;
+                            (combinedFight.tables[tableNames[boss][j]][playerName] as any).total +=
+                                data.data[playerName].total;
                         }
                     });
                 }
