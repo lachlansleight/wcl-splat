@@ -113,6 +113,7 @@ const LogsPage = (): JSX.Element => {
                         <Button
                             onClick={() => {
                                 if (!window.confirm("Really delete this log?")) return;
+                                localStorage.removeItem("reports/" + log.id);
                                 setConfig(cur => ({
                                     ...cur,
                                     logs: cur.logs.filter(l => l.id !== log.id),

@@ -203,7 +203,7 @@ export const prettyTableNames: Record<string, string> = {
     shockVortex: "Shock Vortex Damage",
     empoweredShockVortex: "Empowered Shock Vortex Damage",
     shadowPrison: "Shadow Prison Damage",
-    darkNuclei: "Damage Dark Nuclei",
+    darkNuclei: "Damage to Dark Nuclei",
     dispels: "Dispels",
     whirlSplash: "Bloodbolt Whirl Splash Damage",
     boltSplash: "Twilight Bloodbolt Splash Damage",

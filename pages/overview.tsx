@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from "react";
 import axios from "axios";
 import { FaSync } from "react-icons/fa";
 import { GiCheckMark, GiPlainCircle, GiSkullCrossedBones, GiStopwatch } from "react-icons/gi";
-import dayjs from "dayjs";
 import Button from "components/controls/Button";
 import Layout from "components/layout/Layout";
 import { WclFight } from "lib/WclTypes";
@@ -97,9 +96,28 @@ const OverviewPage = (): JSX.Element => {
         <Layout>
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl">{logData.rawReport.title}</h1>
-                <h2>{dayjs(logData.rawReport.start).format("DD MMMM YY")}</h2>
+                <Button
+                    className="bg-red-400"
+                    onClick={() => {
+                        if (
+                            !window.confirm(
+                                "Really clear data? You will need to re-process to recover it."
+                            )
+                        )
+                            return;
+                        setLogData(cur => ({
+                            ...cur,
+                            rawReport: undefined,
+                            processedReport: undefined,
+                            consumeData: undefined,
+                            bombData: undefined,
+                        }));
+                    }}
+                >
+                    Clear Fights
+                </Button>
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 mt-2">
                 {Object.keys(groupedFights).map(fightName => (
                     <div
                         key={fightName}
