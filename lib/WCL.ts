@@ -94,9 +94,9 @@ class WCL {
             difficulty: rawFight.difficulty === 4 ? "heroic" : "normal",
             kill: rawFight.kill || false,
             percentage: rawFight.kill ? 0 : rawFight.fightPercentage || 0,
-            tanks: summary.playerDetails?.tanks.map(getPlayerData) || [],
-            healers: summary.playerDetails?.healers.map(getPlayerData) || [],
-            dps: summary.playerDetails?.dps.map(getPlayerData) || [],
+            tanks: summary.playerDetails?.tanks?.map(getPlayerData) || [],
+            healers: summary.playerDetails?.healers?.map(getPlayerData) || [],
+            dps: summary.playerDetails?.dps?.map(getPlayerData) || [],
         };
         return processedFight;
     }
